@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 import {
   useFonts,
   Roboto_400Regular,
@@ -8,6 +7,8 @@ import {
 import { WineCard } from "@components/WineCard";
 import { NativeBaseProvider } from "native-base";
 import { THEME } from "src/themes";
+import { Loading } from "@components/Loading";
+
 const wineInfo = {
   name: "palato",
   supplier: "nineWines",
@@ -15,11 +16,17 @@ const wineInfo = {
   type: "white",
   storage: 2,
 };
+
 export default function App() {
+  const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
   return (
     <NativeBaseProvider theme={THEME}>
-      <WineCard data={wineInfo} />
-      <StatusBar style="auto" />
+      <StatusBar
+        barStyle={"light-content"}
+        backgroundColor={"transparent"}
+        translucent
+      />
+      {fontsLoaded ? <WineCard data={wineInfo} /> : <Loading />}
     </NativeBaseProvider>
   );
 }

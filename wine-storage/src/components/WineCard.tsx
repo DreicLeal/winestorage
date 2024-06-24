@@ -1,7 +1,6 @@
 import { HStack, Image } from "native-base";
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { WineDTO } from "src/dtos/WineDTO";
-import wineImage from "src/assets/wine-bottle.svg";
 import { Text } from "native-base";
 
 type Props = TouchableOpacityProps & {
@@ -19,6 +18,12 @@ export const WineCard = ({ data, ...rest }: Props) => {
         rounded={"md"}
         mb={2}
       >
+        <Image
+          source={require("@assets/wine-bottle.svg")}
+          w={110}
+          h={110}
+          alt="alt da imagem"
+        />
         <Text>{data.name}</Text>
         <Text>{data.region}</Text>
       </HStack>
