@@ -3,6 +3,7 @@ import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { WineDTO } from "src/dtos/WineDTO";
 import { Text } from "native-base";
 
+
 type Props = TouchableOpacityProps & {
   data: WineDTO;
 };
@@ -19,9 +20,9 @@ export const WineCard = ({ data, ...rest }: Props) => {
         mb={2}
       >
         <Image
-          source={require("@assets/wine-bottle.svg")}
-          w={110}
-          h={110}
+          source={require("@assets/wine-bottle.png")}
+          w={24}
+          h={24}
           alt="alt da imagem"
         />
         <Text>{data.name}</Text>
