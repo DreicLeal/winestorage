@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "react-native";
 import {
   useFonts,
   Roboto_400Regular,
@@ -8,16 +8,12 @@ import { WineCard } from "@components/WineCard";
 import { NativeBaseProvider } from "native-base";
 import { THEME } from "src/themes";
 import { Loading } from "@components/Loading";
-
-const wineInfo = {
-  name: "palato",
-  supplier: "nineWines",
-  region: "bairrada",
-  type: "white",
-  storage: 2,
-};
+import React from "react";
+import { WinesContextProvider } from "src/context/WinesContext";
+import { useWinesStorage } from "src/hooks/useWineStorage";
 
 export default function App() {
+  const {wineList} = useWinesStorage()
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
   return (
     <NativeBaseProvider theme={THEME}>
@@ -26,7 +22,9 @@ export default function App() {
         backgroundColor={"transparent"}
         translucent
       />
-      {fontsLoaded ? <WineCard data={wineInfo} /> : <Loading />}
+      <WinesContextProvider>
+        {fontsLoaded ? <WineCard data={wineList} /> : <Loading />}
+      </WinesContextProvider>
     </NativeBaseProvider>
   );
 }
