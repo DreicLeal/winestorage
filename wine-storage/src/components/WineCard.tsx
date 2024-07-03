@@ -1,11 +1,11 @@
-import { HStack, Image } from "native-base";
+import { HStack, Image, VStack } from "native-base";
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { WineDTO } from "src/dtos/WineDTO";
 import { Text } from "native-base";
-
+import { Button } from "./Button";
 
 type Props = TouchableOpacityProps & {
-  data: WineDTO;
+  data: WineDTO[];
 };
 
 export const WineCard = ({ data, ...rest }: Props) => {
@@ -25,8 +25,15 @@ export const WineCard = ({ data, ...rest }: Props) => {
           h={24}
           alt="alt da imagem"
         />
-        <Text>{data.name}</Text>
-        <Text>{data.region}</Text>
+        <VStack>
+          <Text>{}</Text>
+          <Text>{}</Text>
+        </VStack>
+        <VStack>
+          <Text>{}</Text>
+          <Button title="<"  />
+          <Button title=">"  />
+        </VStack>
       </HStack>
     </TouchableOpacity>
   );
