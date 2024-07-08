@@ -3,18 +3,27 @@ import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { WineDTO } from "src/dtos/WineDTO";
 import { Text } from "native-base";
 import { Button } from "./Button";
+import { useWinesStorage } from "src/hooks/useWineStorage";
 
-type Props = TouchableOpacityProps & {
-  data: WineDTO[];
-};
+type Props = TouchableOpacityProps & WineDTO;
 
-export const WineCard = ({ data, ...rest }: Props) => {
+export const WineCard = ({
+  name,
+  region,
+  storage,
+  type,
+  id,
+  ...rest
+}: Props) => {
+  const { wineList, setWineList, onAdd, onSubtract } = useWinesStorage();
+
   return (
     <TouchableOpacity {...rest}>
       <HStack
+        justifyContent={"space-between"}
         bg={"gray.500"}
-        p={2}
-        pr={4}
+        p={4}
+        pr={10}
         alignItems={"center"}
         rounded={"md"}
         mb={2}
@@ -26,13 +35,16 @@ export const WineCard = ({ data, ...rest }: Props) => {
           alt="alt da imagem"
         />
         <VStack>
-          <Text>{}</Text>
-          <Text>{}</Text>
+          <Text fontSize={"lg"} fontWeight={"bold"}>{name}</Text>
+          <Text>{region}</Text>
+          <Text>{type}</Text>
         </VStack>
-        <VStack>
-          <Text>{}</Text>
-          <Button title="<"  />
-          <Button title=">"  />
+        <VStack alignItems={"center"}>
+          <Text>{storage}</Text>
+          <HStack w={14} h={14}>
+            <Button title="subctract" onPress={() => onSubtract(id)} />
+            <Button title="add" onPress={() => onAdd(id)} />
+          </HStack>
         </VStack>
       </HStack>
     </TouchableOpacity>
