@@ -4,12 +4,12 @@ import { FlatList, VStack } from "native-base";
 import { useWinesStorage } from "src/hooks/useWineStorage";
 
 export const Home = () => {
-  const { wineList } = useWinesStorage();
+  const { winesList } = useWinesStorage();
   return (
     <VStack>
       <Header />
       <FlatList
-        data={wineList}
+        data={winesList}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <WineCard
