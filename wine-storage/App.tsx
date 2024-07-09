@@ -4,16 +4,15 @@ import {
   Roboto_400Regular,
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
-import { WineCard } from "@components/WineCard";
+
 import { NativeBaseProvider } from "native-base";
 import { THEME } from "src/themes";
-import { Loading } from "@components/Loading";
 import React from "react";
 import { WinesContextProvider } from "src/context/WinesContext";
-import { useWinesStorage } from "src/hooks/useWineStorage";
+import { Loading } from "@components/Loading";
+import { Home } from "@screens/Home";
 
 export default function App() {
-  const {wineList} = useWinesStorage()
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
   return (
     <NativeBaseProvider theme={THEME}>
@@ -23,7 +22,7 @@ export default function App() {
         translucent
       />
       <WinesContextProvider>
-        {fontsLoaded ? <WineCard data={wineList} /> : <Loading />}
+        {fontsLoaded ? <Home /> : <Loading />}
       </WinesContextProvider>
     </NativeBaseProvider>
   );
