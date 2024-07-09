@@ -7,12 +7,11 @@ type Props = IButtonProps & {
 export const Button = ({ title, variant = "solid", ...rest }: Props) => {
   return (
     <NativeBaseButton
-      w={"full"}
-      h={14}
       bg={variant === "outline" ? "transparent" : "green.700"}
       borderWidth={variant === "outline" ? 1 : 0}
       borderColor={"green.700"}
       rounded={"sm"}
+      m={"1"}
       _pressed={{ bg: variant === "outline" ? "gray.500" : "green.500" }}
       {...rest}
     >

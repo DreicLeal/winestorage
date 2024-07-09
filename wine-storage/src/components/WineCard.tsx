@@ -15,13 +15,14 @@ export const WineCard = ({
   id,
   ...rest
 }: Props) => {
-  const { wineList, setWineList, onAdd, onSubtract } = useWinesStorage();
+  const { onAdd, onSubtract } = useWinesStorage();
 
   return (
     <TouchableOpacity {...rest}>
       <HStack
-        justifyContent={"space-between"}
-        bg={"gray.500"}
+        bg={"gray.300"}
+        marginRight={2}
+        marginLeft={2}
         p={4}
         pr={10}
         alignItems={"center"}
@@ -34,16 +35,26 @@ export const WineCard = ({
           h={24}
           alt="alt da imagem"
         />
-        <VStack>
-          <Text fontSize={"lg"} fontWeight={"bold"}>{name}</Text>
+        <VStack w={"32"}>
+          <Text fontSize={"2xl"} fontWeight={"bold"}>
+            {name}
+          </Text>
           <Text>{region}</Text>
           <Text>{type}</Text>
         </VStack>
-        <VStack alignItems={"center"}>
-          <Text>{storage}</Text>
-          <HStack w={14} h={14}>
-            <Button title="subctract" onPress={() => onSubtract(id)} />
-            <Button title="add" onPress={() => onAdd(id)} />
+        <VStack bgColor={"dark.900"} rounded={"md"} width={"32"} h={"24"}>
+          <Text fontSize={"2xl"} alignSelf={"center"} fontWeight={"bold"}>
+            {storage}
+          </Text>
+          <HStack w={"32"} justifyContent={"center"}>
+            <Button
+              h={"12"}
+              w={"12"}
+              padding={"1"}
+              title="-"
+              onPress={() => onSubtract(id)}
+            />
+            <Button h={"12"} w={"12"} title="+" onPress={() => onAdd(id)} />
           </HStack>
         </VStack>
       </HStack>
