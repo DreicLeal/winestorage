@@ -1,5 +1,5 @@
 export type WineDTO = {
-  id: number;
+  id: string;
   name: string;
   region: string;
   type: string;
