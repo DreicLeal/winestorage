@@ -14,7 +14,7 @@ export const Input = ({ errorMessage = null, isInvalid, ...rest }: Props) => {
     <FormControl isInvalid={invalid} mb={4}>
       <NativeBaseInput
         bg={"gray.700"}
-        h={14}
+        h={16}
         px={4}
         borderWidth={0}
         fontSize={"md"}
