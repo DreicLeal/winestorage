@@ -10,7 +10,7 @@ export const Home = () => {
       <Header />
       <FlatList
         data={winesList}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id!}
         renderItem={({ item }) => (
           <WineCard
             name={item.name}
