@@ -18,7 +18,8 @@ export const Button = ({ title, variant = "solid", ...rest }: Props) => {
       <Text
         color={variant === "outline" ? "gray.500" : "white"}
         fontFamily={"heading"}
-        fontSize={"sm"}
+        fontSize={"lg"}
+        fontWeight={"bold"}
       >
         {title}
       </Text>
