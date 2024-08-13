@@ -10,7 +10,8 @@ import { THEME } from "src/themes";
 import React from "react";
 import { WinesContextProvider } from "src/context/WinesContext";
 import { Loading } from "@components/Loading";
-import { Home } from "@screens/Home";
+// import { Home } from "@screens/Home";
+import { AddWinesForm } from "@screens/AddWinesform";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
@@ -22,7 +23,7 @@ export default function App() {
         translucent
       />
       <WinesContextProvider>
-        {fontsLoaded ? <Home /> : <Loading />}
+        {fontsLoaded ? <AddWinesForm /> : <Loading />}
       </WinesContextProvider>
     </NativeBaseProvider>
   );

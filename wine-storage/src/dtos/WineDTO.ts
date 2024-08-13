@@ -1,8 +1,8 @@
 export type WineDTO = {
-  id: string;
+  id?: string;
   name: string;
   region: string;
   type: string;
-  storage: number;
+  storage: number | string;
   supplier: string;
 };
