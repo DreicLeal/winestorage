@@ -5,26 +5,28 @@ import {
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
 
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NativeBaseProvider } from "native-base";
 import { THEME } from "src/themes";
 import React from "react";
 import { WinesContextProvider } from "src/context/WinesContext";
 import { Loading } from "@components/Loading";
-// import { Home } from "@screens/Home";
-import { AddWinesForm } from "@screens/AddWinesform";
+import { AppRoutes } from "src/routes/app.routes";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
   return (
     <NativeBaseProvider theme={THEME}>
-      <StatusBar
-        barStyle={"light-content"}
-        backgroundColor={"transparent"}
-        translucent
-      />
-      <WinesContextProvider>
-        {fontsLoaded ? <AddWinesForm /> : <Loading />}
-      </WinesContextProvider>
+      <GestureHandlerRootView>
+        <StatusBar
+          barStyle={"light-content"}
+          backgroundColor={"transparent"}
+          translucent
+        />
+        <WinesContextProvider>
+          {fontsLoaded ? <AppRoutes /> : <Loading />}
+        </WinesContextProvider>
+      </GestureHandlerRootView>
     </NativeBaseProvider>
   );
 }
