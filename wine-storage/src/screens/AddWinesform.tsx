@@ -7,6 +7,8 @@ import { useForm, Controller } from "react-hook-form";
 import { useWinesStorage } from "src/hooks/useWineStorage";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProp } from "src/routes/app.routes";
 
 type FormDataProps = {
   name: string;
@@ -25,21 +27,25 @@ const addWineSchema = yup.object().shape({
 });
 
 export const AddWinesForm = () => {
+  const navigation = useNavigation<AppNavigatorRoutesProp>();
   const { newWineInclusion } = useWinesStorage();
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormDataProps>({ resolver: yupResolver(addWineSchema) });
 
   const onSubmit = (data: FormDataProps) => {
     newWineInclusion(data);
+    navigation.navigate("home");
+    reset();
   };
   return (
     <VStack>
       <Header />
       <ScrollView>
-        <VStack flex={1} px={10} bgColor={"amber.500"}>
+        <VStack flex={1} px={10}>
           <Center>
             <Heading marginBottom={2}>Adicione um vinho</Heading>
           </Center>
@@ -107,6 +113,7 @@ export const AddWinesForm = () => {
             title="Adicionar"
             variant={"solid"}
             onPress={handleSubmit(onSubmit)}
+            height={16}
             marginBottom={2}
           />
         </VStack>
