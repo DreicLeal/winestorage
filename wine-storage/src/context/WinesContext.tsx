@@ -9,6 +9,7 @@ export type WinesContextDataProps = {
   onAdd: (id: string) => void;
   onSubtract: (id: string) => void;
   newWineInclusion: (wineToAdd: WineDTO) => Promise<void>;
+  deleteWine: (id: string) => Promise<void>;
 };
 
 export const WinesContext = createContext<WinesContextDataProps>(
@@ -22,9 +23,7 @@ type WinesContextProviderProps = {
 export const WinesContextProvider = ({
   children,
 }: WinesContextProviderProps) => {
-  const [winesList, setWinesList] = useState<WineDTO[]>([
-    
-  ]);
+  const [winesList, setWinesList] = useState<WineDTO[]>([]);
 
   const loadWineData = async () => {
     try {
@@ -49,24 +48,46 @@ export const WinesContextProvider = ({
   };
 
   const onSubtract = async (id: string) => {
+    let wStorage: string | number;
     setWinesList((prevList) =>
-      prevList.map((wine) =>
-        wine.id === id ? { ...wine, storage: +wine.storage - 1 } : wine
-      )
+      prevList.map((wine) => {
+        if (wine.id === id) {
+          if (+wine.storage < 1) {
+            wStorage = 0;
+          } else {
+            wStorage = +wine.storage - 1;
+          }
+        }
+        return { ...wine, storage: wStorage };
+      })
     );
     await storageWineSave(winesList);
   };
 
   const newWineInclusion = async (wineToAdd: WineDTO) => {
-    const newId = uuid.v4() as string
+    const newId = uuid.v4() as string;
     wineToAdd.id = newId;
     setWinesList([wineToAdd, ...winesList]);
     await storageWineSave(winesList);
   };
 
+  const deleteWine = async (id: string) => {
+    const newList = winesList.filter((wine) => wine.id !== id);
+
+    setWinesList(newList);
+    await storageWineSave(newList);
+  };
+
   return (
     <WinesContext.Provider
-      value={{ winesList, setWinesList, onAdd, onSubtract, newWineInclusion }}
+      value={{
+        winesList,
+        setWinesList,
+        onAdd,
+        onSubtract,
+        newWineInclusion,
+        deleteWine,
+      }}
     >
       {children}
     </WinesContext.Provider>
