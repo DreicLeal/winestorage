@@ -52,9 +52,9 @@ export const WineCard = ({
               w={"12"}
               padding={"1"}
               title="-"
-              onPress={() => onSubtract(id)}
+              onPress={() => onSubtract(id!)}
             />
-            <Button h={"12"} w={"12"} title="+" onPress={() => onAdd(id)} />
+            <Button h={"12"} w={"12"} title="+" onPress={() => onAdd(id!)} />
           </HStack>
         </VStack>
       </HStack>
