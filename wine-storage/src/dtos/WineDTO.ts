@@ -1,8 +1,14 @@
+type SupplierInfoDTO = {
+  company: string;
+  seller: string;
+  contact: string
+}
+
 export type WineDTO = {
   id?: string;
   name: string;
   region: string;
   type: string;
-  storage: number | string;
-  supplier: string;
+  storage: number;
+  supplier: SupplierInfoDTO;
 };
