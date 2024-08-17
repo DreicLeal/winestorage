@@ -9,21 +9,23 @@ import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProp } from "src/routes/app.routes";
+import { WineDTO } from "src/dtos/WineDTO";
 
-type FormDataProps = {
-  name: string;
-  region: string;
-  type: string;
-  storage: string;
-  supplier: string;
-};
+const supplierSchema = yup.object().shape({
+  company: yup.string().required("Campo Obrigatório"),
+  seller: yup.string().required("Campo Obrigatório"),
+  contact: yup.string().required("Campo Obrigatório"),
+});
 
 const addWineSchema = yup.object().shape({
-  name: yup.string().required(),
-  region: yup.string().required(),
-  type: yup.string().required(),
-  storage: yup.string().required(),
-  supplier: yup.string().required(),
+  name: yup.string().required("Campo Obrigatório"),
+  region: yup.string().required("Campo Obrigatório"),
+  type: yup.string().required("Campo Obrigatório"),
+  storage: yup
+    .number()
+    .required("Campo Obrigatório")
+    .typeError("Deve ser um número"),
+  supplier: supplierSchema,
 });
 
 export const AddWinesForm = () => {
@@ -34,9 +36,22 @@ export const AddWinesForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormDataProps>({ resolver: yupResolver(addWineSchema) });
+  } = useForm<WineDTO>({
+    resolver: yupResolver(addWineSchema),
+    defaultValues: {
+      name: "",
+      region: "",
+      type: "",
+      storage: undefined, 
+      supplier: {
+        company: "",
+        seller: "",
+        contact: "",
+      },
+    },
+  });
 
-  const onSubmit = (data: FormDataProps) => {
+  const onSubmit = (data: WineDTO) => {
     newWineInclusion(data);
     navigation.navigate("home");
     reset();
@@ -75,18 +90,6 @@ export const AddWinesForm = () => {
           />
           <Controller
             control={control}
-            name="supplier"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                placeholder="Fornecedor"
-                onChangeText={onChange}
-                value={value}
-                errorMessage={errors.supplier?.message}
-              />
-            )}
-          />
-          <Controller
-            control={control}
             name="type"
             render={({ field: { onChange, value } }) => (
               <Input
@@ -103,9 +106,46 @@ export const AddWinesForm = () => {
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Quantidade"
+                onChangeText={(text) => onChange(Number(text))}
+                value={value !== undefined ? String(value) : ""}
+                keyboardType="numeric"
+                errorMessage={errors.storage?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="supplier.company"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="Empresa"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.storage?.message}
+                errorMessage={errors.supplier?.company?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="supplier.seller"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="Representante"
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors.supplier?.seller?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="supplier.contact"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="Contato"
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors.supplier?.contact?.message}
               />
             )}
           />
