@@ -1,5 +1,5 @@
 import { storageWineGet, storageWineSave } from "@storage/storageWines";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback } from "react";
 import { WineDTO } from "src/dtos/WineDTO";
 import uuid from "react-native-uuid";
 
@@ -25,58 +25,82 @@ export const WinesContextProvider = ({
 }: WinesContextProviderProps) => {
   const [winesList, setWinesList] = useState<WineDTO[]>([]);
 
-  const loadWineData = async () => {
+  const loadWineData = useCallback(async () => {
     try {
       const storageWinesList: WineDTO[] = await storageWineGet();
       setWinesList(storageWinesList);
     } catch (error) {
       throw error;
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadWineData();
+  }, [loadWineData]);
+
+  const saveWineList = useCallback(async (updatedList: WineDTO[]) => {
+    try {
+      await storageWineSave(updatedList);
+    } catch (error) {
+      console.error("Failed to save wine data:", error);
+    }
   }, []);
 
-  const onAdd = async (id: string) => {
-    setWinesList((prevList) =>
-      prevList.map((wine) =>
-        wine.id === id ? { ...wine, storage: +wine.storage + 1 } : wine
-      )
-    );
-    await storageWineSave(winesList);
-  };
+  const onAdd = useCallback(
+    async (id: string) => {
+      setWinesList((prevList) => {
+        const updatedList = prevList.map((wine) =>
+          wine.id === id ? { ...wine, storage: wine.storage + 1 } : wine
+        );
+        saveWineList(updatedList);
+        return updatedList;
+      });
 
-  const onSubtract = async (id: string) => {
-    let wStorage: string | number;
-    setWinesList((prevList) =>
-      prevList.map((wine) => {
-        if (wine.id === id) {
-          if (+wine.storage < 1) {
-            wStorage = 0;
-          } else {
-            wStorage = +wine.storage - 1;
+      await storageWineSave(winesList);
+    },
+    [saveWineList]
+  );
+
+  const onSubtract = useCallback(
+    async (id: string) => {
+      setWinesList((prevList) => {
+        const updatedList = prevList.map((wine) => {
+          if (wine.id === id) {
+            const newStorage = Math.max(wine.storage - 1, 0);
+            return { ...wine, storage: newStorage };
           }
-        }
-        return { ...wine, storage: wStorage };
-      })
-    );
-    await storageWineSave(winesList);
-  };
+          return wine;
+        });
+        saveWineList(updatedList);
+        return updatedList;
+      });
+    },
+    [saveWineList]
+  );
 
-  const newWineInclusion = async (wineToAdd: WineDTO) => {
-    const newId = uuid.v4() as string;
-    wineToAdd.id = newId;
-    setWinesList([wineToAdd, ...winesList]);
-    await storageWineSave(winesList);
-  };
+  const newWineInclusion = useCallback(
+    async (wineToAdd: WineDTO) => {
+      const newWine = { ...wineToAdd, id: uuid.v4() as string };
 
-  const deleteWine = async (id: string) => {
-    const newList = winesList.filter((wine) => wine.id !== id);
+      setWinesList((prevList) => {
+        const updatedList = [newWine, ...prevList];
+        saveWineList(updatedList);
+        return updatedList;
+      });
+    },
+    [saveWineList]
+  );
 
-    setWinesList(newList);
-    await storageWineSave(newList);
-  };
+  const deleteWine = useCallback(
+    async (id: string) => {
+      setWinesList((prevList) => {
+        const updatedList = prevList.filter((wine) => wine.id !== id);
+        saveWineList(updatedList);
+        return updatedList;
+      });
+    },
+    [saveWineList]
+  );
 
   return (
     <WinesContext.Provider
