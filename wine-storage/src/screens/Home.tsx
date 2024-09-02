@@ -1,61 +1,53 @@
 import { Group } from "@components/Group";
 import { Header } from "@components/Header";
 import { WineCard } from "@components/WineCard";
-import { debounce } from "lodash";
-import { useFocusEffect } from "@react-navigation/native";
 import { FlatList, Input, VStack } from "native-base";
 import { useCallback, useEffect, useState } from "react";
 import { useWinesStorage } from "src/hooks/useWineStorage";
+import { WineDTO } from "src/dtos/WineDTO";
 
 export const Home = () => {
-  const { winesList, setWinesList } = useWinesStorage();
+  const { winesList } = useWinesStorage();
+
   const [typeFilter, setTypeFilter] = useState(winesList);
   const [wineTypes, setWineTypes] = useState<string[]>([]);
   const [typeSelected, setTypeSelected] = useState<string>("Todos");
   const [search, setSearch] = useState("");
 
-  const wTypes = winesList.map((wines) => wines.type);
-  const uniqueTypes = wTypes.filter((wine, i) => wTypes.indexOf(wine) === i);
-
   useEffect(() => {
+    const wTypes = winesList.map((wines) => wines.type);
+    const uniqueTypes = wTypes.filter((wine, i) => wTypes.indexOf(wine) === i);
     setWineTypes(["Todos", ...uniqueTypes]);
-  }, []);
+  }, [winesList]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (typeSelected === "Todos") {
-        setTypeFilter(winesList);
-      } else {
-        setTypeFilter(winesList.filter((wine) => wine.type === typeSelected));
-      }
-    }, [typeSelected, winesList])
-  );
+  const applyTypeFilter = useCallback(() => {
+    if (typeSelected === "Todos") {
+      return winesList;
+    } else {
+      return winesList.filter((wine) => wine.type === typeSelected);
+    }
+  }, [typeSelected, winesList]);
 
-  const handleSearch = useCallback(
-    (query: string) => {
-      if (query !== "") {
-        const filteredList = winesList.filter((wine) =>
-          wine.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setTypeFilter(
-          typeSelected === "Todos"
-            ? filteredList
-            : filteredList.filter((wine) => wine.type === typeSelected)
-        );
-      } else {
-        setTypeFilter(
-          typeSelected === "Todos"
-            ? winesList
-            : winesList.filter((wine) => wine.type === typeSelected)
-        );
+  const applySearchFilter = useCallback(
+    (filteredWines: WineDTO[]) => {
+      if (search !== "") {
+        return (filteredWines = winesList.filter(
+          (wine) =>
+            wine.name.toLowerCase().includes(search.toLowerCase()) ||
+            wine.type.toLowerCase().includes(search.toLowerCase()) ||
+            wine.region.toLowerCase().includes(search.toLowerCase())
+        ));
       }
+      return filteredWines;
     },
-    [winesList, typeSelected]
+    [search]
   );
 
   useEffect(() => {
-    handleSearch(search);
-  }, [search]);
+    const typeFilteredWines = applyTypeFilter();
+    const finalFilteredWines = applySearchFilter(typeFilteredWines);
+    setTypeFilter(finalFilteredWines);
+  }, [search, typeSelected, applySearchFilter, applyTypeFilter]);
 
   return (
     <VStack>
@@ -68,7 +60,9 @@ export const Home = () => {
         color={"gray.100"}
         fontSize={"md"}
         variant={"filled"}
-        width={"100%"}
+        marginX={2}
+        width={"container"}
+        px={"2"}
         rounded={"md"}
         _focus={{
           borderColor: "gray.500",
