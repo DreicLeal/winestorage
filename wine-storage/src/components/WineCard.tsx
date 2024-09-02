@@ -1,11 +1,11 @@
 import { Box, HStack, Image, View, VStack } from "native-base";
-import { Linking } from "react-native";
 import { WineDTO } from "src/dtos/WineDTO";
 import { Text } from "native-base";
 import { Button } from "./Button";
 import { useWinesStorage } from "src/hooks/useWineStorage";
 import { Swipeable } from "react-native-gesture-handler";
 import { useState } from "react";
+import { PhoneNumber } from "./PhoneNumber";
 
 export const WineCard = ({
   name,
@@ -36,14 +36,6 @@ export const WineCard = ({
     );
   };
 
-  const PhoneNumber = ({ number }: { number: string }) => {
-    const handlePress = () => {
-      Linking.openURL(`tel:${number}`);
-    };
-
-    return <Text onPress={handlePress}>{number}</Text>;
-  };
-
   return (
     <View>
       <Swipeable renderLeftActions={leftSwipe}>
@@ -66,7 +58,6 @@ export const WineCard = ({
               alt="alt da imagem"
             />
             <VStack w={"32"}>
-    
               <Text fontSize={"2xl"} fontWeight={"bold"}>
                 {name}
               </Text>
@@ -112,11 +103,13 @@ export const WineCard = ({
               bgColor={"gray.200"}
               alignSelf={"flex-start"}
             >
-              <Text fontSize={"xl"} fontWeight={"bold"}>Informações do fornecedor</Text>
-              <Text fontSize={"xl"}>Empresa:{supplier.company}</Text>
+              <Text fontSize={"xl"} fontWeight={"bold"}>
+                Informações do fornecedor
+              </Text>
+              <Text fontSize={"xl"}>Empresa: {supplier.company}</Text>
               <Text fontSize={"xl"}>Nome: {supplier.seller}</Text>
-              <Text fontSize={"xl"}>Contacto: 
-                <PhoneNumber number={supplier.contact} />
+              <Text fontSize={"xl"}>
+                Contacto: <PhoneNumber number={supplier.contact} />
               </Text>
             </View>
           )}
