@@ -10,7 +10,6 @@ import { Button } from "@components/Button";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProp } from "src/routes/app.routes";
 import { WineDTO } from "src/dtos/WineDTO";
-import { Platform, KeyboardAvoidingView } from "react-native";
 
 const supplierSchema = yup.object().shape({
   company: yup.string().required("Campo Obrigatório"),
